@@ -1,13 +1,34 @@
-function readFile(myCallbackFunction) {
+const util = require("util");
+const fs = require("fs");
+
+function makeApiCall() {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      myCallbackFunction("This is the contents of the file.");
-      // return "This is the contents of the file.";
-    }, 3000);
-  }
-  
-  // console.log(readFile());
-  
-  readFile((data) => {
-    console.log(data);
+      return resolve({
+        name: "Jonathan",
+      });
+    }, 2500);
   });
-  
+}
+
+// makeApiCall().then((response) => {
+//   console.log(response);
+// });
+
+const readFileAsync = util.promisify(fs.readFile);
+
+fs.readFile("hello.txt", "utf-8", (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+readFileAsync("hello.txt", "utf-8")
+  .then((data) => {
+    console.log(data);
+    makeApiCall().then((response) => {
+      console.log(response);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
